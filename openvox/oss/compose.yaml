@@ -9,9 +9,9 @@ services:
       # For private repos, use git@github.com:user/repo.git and provide SSH keys
       # R10K_REMOTE: https://github.com/betadots/demo-control-repo.git
     volumes:
-      - openvoxserver:/opt/puppetlabs/server/data/puppetserver
-      - openvoxserver-ssl:/etc/puppetlabs/puppet/ssl
-      - openvoxserver-ca:/etc/puppetlabs/puppetserver/ca
+      - ./server-data/puppetserver:/opt/puppetlabs/server/data/puppetserver
+      - ./server-data/ssl:/etc/puppetlabs/puppet/ssl
+      - ./server-data/ca:/etc/puppetlabs/puppetserver/ca
       - ./openvox-code:/etc/puppetlabs/code
     restart: always
     ports:
@@ -28,7 +28,8 @@ services:
     image: ghcr.io/openvoxproject/openvoxdb:latest
     hostname: openvoxdb
     volumes:
-      - openvoxdb:/opt/puppetlabs/server/data/puppetdb
+      - ./server-data/puppetdb:/opt/puppetlabs/server/data/puppetdb
+      - ./server-data/puppetdb/logs:/opt/puppetlabs/server/data/puppetdb/logs
     restart: always
     depends_on:
       openvoxserver:
@@ -57,7 +58,7 @@ services:
       timeout: 3s
       retries: 3
     volumes:
-      - openvoxdb-postgres:/var/lib/postgresql/data
+      - ./server-data/postgres:/var/lib/postgresql/data
       - ./postgresql_init:/docker-entrypoint-initdb.d
     restart: always
     profiles:
@@ -130,7 +131,7 @@ services:
     container_name: crafty-testing
     hostname: crafty-testing
     volumes:
-      - agent-ssl:/etc/puppetlabs/puppet/ssl
+      - ./agent-ssl:/etc/puppetlabs/puppet/ssl
     restart: always
     profiles:
       - test
@@ -140,10 +141,4 @@ networks:
     name: crafty-oss
 
 volumes:
-  openvoxserver:
-  openvoxserver-ssl:
-  openvoxserver-ca:
-  openvoxdb:
-  openvoxdb-postgres:
-  agent-ssl:
   hdm-db:

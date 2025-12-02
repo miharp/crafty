@@ -6,6 +6,7 @@ services:
     hostname: openvox-ca
     environment:
       OPENVOXSERVER_HOSTNAME: openvox-ca
+      CA_HOSTNAME: openvox-ca
       USE_OPENVOXDB: false
       CA_ENABLED: true
       CA_ALLOW_SUBJECT_ALT_NAMES: true
