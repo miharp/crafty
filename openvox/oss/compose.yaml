@@ -9,8 +9,8 @@ services:
       # For private repos, use git@github.com:user/repo.git and provide SSH keys
       # R10K_REMOTE: https://github.com/betadots/demo-control-repo.git
     volumes:
-      - ./openvoxserver-ssl:/etc/puppetlabs/puppet/ssl
-      - ./openvoxserver-ca:/etc/puppetlabs/puppetserver/ca
+      - openvoxserver:/opt/puppetlabs/server/data/puppetserver
+      - openvoxserver-ssl:/etc/puppetlabs/puppet/ssl
       - ./openvox-code:/etc/puppetlabs/code
     restart: always
     ports:
@@ -137,6 +137,8 @@ networks:
     name: crafty-oss
 
 volumes:
+  openvoxserver:
+  openvoxserver-ssl:
   openvoxdb-postgres:
   agent-ssl:
   hdm-db:

@@ -4,25 +4,39 @@
 
 ```shell
 docker compose --profile openvox up -d
+# Wait for all the services to be in the healthy Status
+docker compose ps
 ```
 
 ## Test an agent
 
-when the openvox-profile is up and healthy, start the test-profile
+Once the openvox-profile is up and healthy, run puppet agent.
 
 ```shell
-docker compose --profile test run --remove-orphans testing agent -t
+docker compose --profile test run --rm testing agent -t
 ```
 
-## Start hdm
+## Start HDM
+
+The [Hiera Data Manager (HDM)](https://github.com/betadots/hdm) is a Web UI to visualize Hiera data and make it searchable!
+It also allows you to read/update/create that configuration.
 
 ```shell
 docker compose --profile hdm up -d
 ```
 
-then open up: <http://0.0.0.0:3000/>
+Open: <http://localhost:3000/> and follow the instructions to setup users.
 
-## cleanup
+## Access Puppetboard
+
+[Puppetboard](https://github.com/voxpupuli/puppetboard) is a web interface to PuppetDB aiming to replace the reporting functionality of Puppet Enterprise console.
+It is included in the `openvox` profile and should be running.
+
+Open: <http://localhost:8088/> and you should see one node checking in from the previous agent run above.
+
+## Cleanup
+
+To stop all containers and remove all volumes (including generated certificates and database data), run the cleanup script:
 
 ```shell
 ./clean.sh
@@ -30,11 +44,11 @@ then open up: <http://0.0.0.0:3000/>
 
 ## Generate additional certificates
 
-After the OpenVox stack is running, execute the following commant to generate an additional certificate.
+After the OpenVox stack is running, execute the following command to generate an additional certificate.
 It will be put in the openvoxserver-ssl volume, or any other volume you may have mounted for `/etc/puppetlabs/puppet/ssl`.
 
 ```bash
-docker exec oss-puppet-1 puppetserver ca generate --certname puppetboard
+docker exec oss-openvoxserver-1 puppetserver ca generate --certname puppetboard
 ```
 
 Output:
@@ -53,7 +67,7 @@ But in general this is a bad idea, but for testing this might work.
 For the puppetboard, one also can specify the certs as base64 strings. To get the strings do:
 
 ```bash
-docker exec oss-puppet-1 cat /etc/puppetlabs/puppet/ssl/certs/ca.pem | base64
-docker exec oss-puppet-1 cat /etc/puppetlabs/puppet/ssl/certs/puppetboard.pem | base64
-docker exec oss-puppet-1 cat /etc/puppetlabs/puppet/ssl/private_keys/puppetboard.pem | base64
+docker exec oss-openvoxserver-1 cat /etc/puppetlabs/puppet/ssl/certs/ca.pem | base64
+docker exec oss-openvoxserver-1 cat /etc/puppetlabs/puppet/ssl/certs/puppetboard.pem | base64
+docker exec oss-openvoxserver-1 cat /etc/puppetlabs/puppet/ssl/private_keys/puppetboard.pem | base64
 ```

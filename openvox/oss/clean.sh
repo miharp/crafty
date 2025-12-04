@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-docker compose --profile openvox down
-docker compose --profile hdm down
-docker compose --profile test down --remove-orphans
+# Stop all services and remove orphans
+COMPOSE_PROFILES=openvox,hdm,test docker compose down --remove-orphans
 
-rm -rf openvoxserver-ca
-rm -rf openvoxserver-data
-rm -rf openvoxserver-ssl
-
-docker volume rm oss_openvoxdb-postgres
-docker volume rm oss_hdm-db
-docker volume rm oss_agent-ssl
+docker volume rm oss_openvoxserver || true
+docker volume rm oss_openvoxserver-ssl || true
+docker volume rm oss_openvoxdb-postgres || true
+docker volume rm oss_agent-ssl || true
+docker volume rm oss_hdm-db || true
